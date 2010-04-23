@@ -75,6 +75,21 @@ class ChargifySubscription extends ChargifyConnector
   }
   
   public function getUpdatedAt() { return $this->updated_at; }
+  
+  public function charge($amount_in_cents, $memo) {
+    $amount = intval($amount_in_cents);
+    $memo   = htmlentities($memo);
+    $data   = <<<XML
+      <charge>
+        <amount_in_cents type="integer">$amount</amount_in_cents>
+        <memo>$memo</memo>
+      </charge>
+XML;
+    
+    $xml = $this->sendRequest("/subscriptions/{$this->id}/charges.xml", $data);
+    
+    $response = new SimpleXMLElement($xml);
+    
+    return $response;
+  }
 }
-
-?>
