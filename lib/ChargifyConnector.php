@@ -194,7 +194,8 @@ class ChargifyConnector
     
     $subscription = new SimpleXMLElement($xml);
     
-    return new ChargifySubscription($subscription); 
+    if (isset($subscription->error)) { return $subscription; }
+    else { return new ChargifySubscription($subscription);   }
   }  
   
   /**
